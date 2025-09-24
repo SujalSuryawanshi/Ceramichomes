@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Left Sidebar - Filters -->
+            <div class="lg:w-1/4">
+                <div class="bg-white border rounded-lg p-6 sticky top-32">
+                    <!-- Keywords Section -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold mb-3">Keywords</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm bg-gray-100 px-2 py-1 rounded">Spring</span>
+                                    <button class="text-gray-400 hover:text-gray-600">
+                                        <i data-lucide="x" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm bg-gray-100 px-2 py-1 rounded">Modern</span>
+                                    <button class="text-gray-400 hover:text-gray-600">
+                                        <i data-lucide="x" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="mb-6">
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="location" class="mr-2">
+                                <label for="location" class="text-sm">Location</label>
+                            </div>
+                            <p class="text-xs text-gray-500 ml-5">Description</p>
+                            
+                            <div class="flex items-center">
+                                <input type="checkbox" id="local" class="mr-2">
+                                <label for="local" class="text-sm">Local</label>
+                            </div>
+                            <p class="text-xs text-gray-500 ml-5">Description</p>
+                        </div>
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold mb-3">Price Range</h3>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm">$0</span>
+                            <div class="flex-1">
+                                <input type="range" min="0" max="100" value="50" class="w-full">
+                            </div>
+                            <span class="text-sm">$100</span>
+                        </div>
+                    </div>
+
+                    <!-- Color Filter -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold mb-3">Color</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="color1" class="mr-2">
+                                <div class="w-4 h-4 bg-red-500 rounded-full mr-2"></div>
+                                <label for="color1" class="text-sm">Label</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="color2" class="mr-2">
+                                <div class="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
+                                <label for="color2" class="text-sm">Label</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="color3" class="mr-2">
+                                <div class="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
+                                <label for="color3" class="text-sm">Label</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="color4" class="mr-2">
+                                <div class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div>
+                                <label for="color4" class="text-sm">Label</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="color5" class="mr-2">
+                                <div class="w-4 h-4 bg-purple-500 rounded-full mr-2"></div>
+                                <label for="color5" class="text-sm">Label</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="lg:w-3/4">
+                <!-- Header with Text Content -->
+                <div class="mb-8">
+                    <div class="flex items-start space-x-6">
+                        <!-- Image Placeholder -->
+                        <div class="w-80 h-80 bg-gray-200 flex-shrink-0 rounded">
+                            <div class="w-full h-full flex items-center justify-center">
+                                {% if category.image %}
+                                <img src="{{ category.image.url }}" alt="Cat Image" class="w-full h-full object-cover rounded">
+                                {% endif %}
+                            </div>
+                        </div>
+
+
+                        
+                        <!-- Text Content -->
+                        <div class="flex-1">
+                        <h1 class="text-5xl font-bold mb-2" style="font-family: 'Cinzel', serif;">
+                        {{ category.name }}
+                        </h1>
+                            <p class="text-gray-600 text-sm mb-4"> </p>
+
+                            <p class="text-gray-700 leading-relaxed mt-4">
+                                {{category.description}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Tags -->
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <span class="bg-black text-white text-sm px-3 py-1 rounded-full">New</span>
+                    <span class="bg-gray-200 text-gray-700 text-sm px-3 py-1 rounded-full">Price ascending</span>
+                    <span class="bg-gray-200 text-gray-700 text-sm px-3 py-1 rounded-full">Price descending</span>
+                    <span class="bg-gray-200 text-gray-700 text-sm px-3 py-1 rounded-full">Rating</span>
+                </div>
+
+                <!-- Product Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                        {% for tile in tiles %}
+                        <!-- Tile Card -->
+                        <div class="bg-white border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                            <!-- Tile Image -->
+                            <div class="bg-gray-200 aspect-square">
+                                {% if tile.image %}
+                                    <img src="{{ tile.image.url }}" alt="{{ tile.name }}" class="object-cover w-full h-full">
+                                {% else %}
+                                    <div class="w-full h-full flex items-center justify-center text-gray-500">
+                                        No Image
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Tile Info -->
+                            <div class="p-4 space-y-1">
+                                <h3 class="text-md font-semibold text-gray-800">{{ tile.name }}</h3>
+                                <p class="text-sm text-gray-600">Material: {{ tile.material|capfirst }}</p>
+                                <p class="text-sm text-gray-600">Size: {{ tile.dimensions }}</p>
+                                <p class="text-lg font-semibold">
+                                 {{ tile.price_per_sqft }}/sq.ft
+                                </p>
+                            </div>
+
+                            <!-- View Detail Button -->
+                            <div class="p-4">
+                                <a href="{% url 'tile_detail' tile.id %}" class="block">
+                                    <button class="w-full bg-transparent border border-blue-600 text-blue-600 py-2 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300">
+                                        View Detail
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ceramic Homes - Premium Tiles for Modern Living</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <link rel="icon" type="image/png" href="{% static 'images/ch8round.png' %}">
+</head>
+<body class="min-h-screen bg-white">
+    <!-- Navigation -->
+    <nav class="bg-gray-900 text-white shadow-lg sticky top-0 z-50 transition-transform duration-300" style="background-image: linear-gradient(135deg, #ff512f 0%, #dd2476 30%, #7b2ff7 60%, #1e3f73 100%);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+    <img class="h-24 w-24 rounded-full object-cover" src="{% static 'images/ch8round.png' %}" alt="Logo">
+    <div class="text-sm sm:text-lg lg:text-xl font-bold font-serif text-white">
+        <span><a href="/">Ceramic Homes</a></span>
+    </div>
+</div>
+
+
+                <!-- Desktop Search Bar -->
+                <div class="hidden lg:flex flex-1 mx-4 max-w-md">
+                    <input
+                        type="text"
+                        placeholder="Search here..."
+                        class="w-full px-4 py-2 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+
+                <!-- Desktop Actions -->
+                <div class="hidden lg:flex items-center space-x-4">
+                    <button class="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm transition-colors">
+                        <i data-lucide="store" class="w-4 h-4 mr-1"></i> Stores
+                    </button>
+                    <button class="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm transition-colors">
+                        <i data-lucide="download" class="w-4 h-4 mr-1"></i> Catalogue
+                    </button>
+                    {% if user.is_authenticated %}
+    <div class="relative inline-block text-left">
+    <!-- User icon -->
+    <i 
+        data-lucide="user" 
+        class="w-6 h-6 cursor-pointer hover:text-blue-300 transition-colors" 
+        id="userDropdownButton" 
+        aria-haspopup="true" 
+        aria-expanded="false"
+    ></i>
+
+    <!-- Dropdown menu -->
+    <div 
+        id="userDropdownMenu" 
+        class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50"
+        role="menu" 
+        aria-orientation="vertical" 
+        aria-labelledby="userDropdownButton"
+    >
+        <div class="px-4 py-3 text-gray-700 border-b border-gray-200">
+        <p class="font-semibold" id="usernameDisplay">{{ user.username }}</p>
+        </div>
+        <form method="post" action="{% url 'logout' %}" class="px-4 py-2">
+        {% csrf_token %}
+        <button 
+            type="submit" 
+            class="w-full text-left text-red-600 hover:bg-red-100 rounded px-2 py-2 transition"
+        >
+            Logout
+        </button>
+        </form>
+    </div>
+    </div>
+                    {% else %}
+                    <a href="{% url "login" %}"><i data-lucide="user" class="w-6 h-6 cursor-pointer hover:text-blue-300 transition-colors"></i></a>
+                    {% endif %}
+                    
+                    <!-- Cart Button -->
+                        <button onclick="toggleCart()" >
+                        <i data-lucide="shopping-cart" class="w-5 h-5 cursor-pointer hover:text-blue-300 transition-colors"></i>
+                        </button>
+
+                    <!-- Cart Backdrop -->
+                    <div id="cart-backdrop" class="cart-backdrop" onclick="closeCart()"></div>
+
+                    <!-- Cart Overlay -->
+                    <div id="cart-overlay" class="cart-overlay">
+                        <div class="h-full flex flex-col">
+                            <!-- Cart Header -->
+                            <div class="p-4 border-b border-gray-200 flex items-center justify-between bg-white">
+                                <h3 class="text-lg font-bold text-gray-800">Shopping Cart</h3>
+                                <button onclick="closeCart()" class="p-1 hover:bg-gray-100 rounded">
+                                    <i data-lucide="x" class="w-5 h-5 text-gray-600"></i>
+                                </button>
+                            </div>
+
+                            <!-- Cart Items -->
+                            <div class="flex-1 overflow-y-auto p-4">
+                                <div id="cart-items-container">
+                                    <div class="text-center text-black-500 py-8">
+                                        <p>Loading cart items...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cart Footer -->
+                            <div class="border-t border-gray-200 p-4 bg-white">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="font-bold text-lg text-gray-800">Total:</span>
+                                    <span id="cart-total" class="font-bold text-lg text-gray-800">₹0.00</span>
+                                </div>
+                                <button class="w-full gradient-bg text-white py-3 rounded-lg hover:opacity-90 transition-opacity font-bold">
+                                    CHECKOUT
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Mobile Actions -->
+                <div class="flex lg:hidden items-center space-x-3">
+                    <i data-lucide="search" class="w-5 h-5 cursor-pointer hover:text-blue-300 transition-colors"></i>
+                    <i data-lucide="user" class="w-5 h-5 cursor-pointer hover:text-blue-300 transition-colors"></i>
+                      <button onclick="toggleCart()" >
+                        <i data-lucide="shopping-cart" class="w-5 h-5 cursor-pointer hover:text-blue-300 transition-colors"></i>
+                        </button>                    <button id="mobile-menu-btn" class="text-white ml-2">
+                        <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+                        <i data-lucide="x" id="close-icon" class="w-6 h-6 hidden"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Search Bar -->
+            <div class="lg:hidden mt-3">
+                <input
+                    type="text"
+                    placeholder="Search here..."
+                    class="w-full px-4 py-2 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
+        </div>
+
+        <!-- Desktop Navigation Links -->
+        <div class="hidden lg:block bg-white text-black w-full overflow-x-auto">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex space-x-8 text-sm font-medium">
+                {% for category in categories %}
+                    <a href="{% url "category_detail" category.name %}" class="hover:text-blue-600 transition-colors whitespace-nowrap"> {{ category.name }} </a>
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div class="lg:hidden mobile-menu bg-white text-black" id="mobile-menu">
+            <div class="px-4 py-2 space-y-1">
+                <a href="#" class="block px-3 py-2 hover:bg-gray-100 rounded transition-colors">Wall Tiles</a>
+                <a href="#" class="block px-3 py-2 hover:bg-gray-100 rounded transition-colors">Floor Tiles</a>
+                <a href="#" class="block px-3 py-2 hover:bg-gray-100 rounded transition-colors">Bathroom Tiles</a>
+                <a href="#" class="block px-3 py-2 hover:bg-gray-100 rounded transition-colors">Kitchen Tiles</a>
+                <a href="#" class="block px-3 py-2 hover:bg-gray-100 rounded transition-colors">Outdoor Tiles</a>
+                <a href="#" class="block px-3 py-2 hover:bg-gray-100 rounded transition-colors">Decorative Tiles</a>
+                <a href="#" class="block px-3 py-2 hover:bg-gray-100 rounded transition-colors">Natural Stone</a>
+                
+                <!-- Mobile Action Buttons -->
+                <div class="pt-4 pb-2 space-y-2">
+                    
+                    <button class="w-full flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors">
+                        <i data-lucide="store" class="w-4 h-4 mr-2"></i> Find Stores
+                    </button>
+                    <button class="w-full flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors">
+                        <i data-lucide="download" class="w-4 h-4 mr-2"></i> Download Catalogue
+                    </button>
+                    <div class="px-4 py-3 text-gray-700 border-b border-gray-200">
+                    <form method="post" action="{% url 'logout' %}" class="px-4 py-2">
+                    {% csrf_token %}
+                    <button 
+                        type="submit" 
+                        class="w-full text-left text-red-600 hover:bg-red-100 rounded px-2 py-2 transition"
+                    >
+                        Logout
+                    </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+{% block content %}
+{% endblock content %}
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16" style="background-image: linear-gradient(135deg, #ff512f 0%, #dd2476 30%, #7b2ff7 60%, #1e3f73 100%);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">Ceramic Homes</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        Premium tiles for modern living. Transform your space with our exceptional collection of ceramic, 
+                        porcelain, and natural stone tiles.
+                    </p>
+                    <div class="flex space-x-4">
+                        <i data-lucide="facebook" class="h-6 w-6 text-gray-300 hover:text-white cursor-pointer transition-colors duration-200"></i>
+                        <i data-lucide="twitter" class="h-6 w-6 text-gray-300 hover:text-white cursor-pointer transition-colors duration-200"></i>
+                        <i data-lucide="instagram" class="h-6 w-6 text-gray-300 hover:text-white cursor-pointer transition-colors duration-200"></i>
+                        <i data-lucide="linkedin" class="h-6 w-6 text-gray-300 hover:text-white cursor-pointer transition-colors duration-200"></i>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-6">Products</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Wall Tiles</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Floor Tiles</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Bathroom Tiles</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Kitchen Tiles</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Outdoor Tiles</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6">Size</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Wall Tiles</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Floor Tiles</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Bathroom Tiles</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Kitchen Tiles</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Outdoor Tiles</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-6">Services</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Design Consultation</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Installation</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Maintenance</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Custom Solutions</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Project Management</a></li>
+                    </ul>
+                </div>
+                <hr>
+                <hr>
+                <hr>
+                <hr>
+                <div>
+                    <h4 class="font-bold mb-6">Contact Info</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <i data-lucide="map-pin" class="h-5 w-5 text-gray-300 mr-3"></i>
+                            <span class="text-gray-300">123 Tile Avenue, Design District, NY 10001</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i data-lucide="phone" class="h-5 w-5 text-gray-300 mr-3"></i>
+                            <span class="text-gray-300">+1 (555) 123-4567</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i data-lucide="mail" class="h-5 w-5 text-gray-300 mr-3"></i>
+                            <span class="text-gray-300">info@ceramichomes.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-300">
+                <p>&copy; 2024 Ceramic Homes. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+<script src="{% static 'js/all.js' %}"></script>
+</body>
+</html>
